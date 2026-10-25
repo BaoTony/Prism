@@ -57,7 +57,7 @@ else:
 def git(*args, timeout=60):
     try:
         r = subprocess.run(
-            ["git"] + list(args),
+            ["git", "-c", "core.quotepath=false"] + list(args),
             capture_output=True, text=True, timeout=timeout,
             cwd=str(REPO), encoding="utf-8", errors="replace",
             creationflags=_CREATEFLAGS, startupinfo=_STARTUP,
