@@ -37,6 +37,7 @@
 |------|------|---------|---------|
 | **10** | [10-自定义控件开发实战指南.md](./10-自定义控件开发实战指南.md) | 从零开发控件的完整流程、最佳实践 | 90分钟 |
 | **11** | [11-性能优化与调试技巧.md](./11-性能优化与调试技巧.md) | 性能分析、内存优化、常见问题解决 | 60分钟 |
+| **12** | [12-项目构建与编译链路详解.md](./12-项目构建与编译链路详解.md) | 工具链分析、Cake 构建系统、20 框架编译链路、本地构建实战 | 60分钟 |
 
 ---
 
@@ -85,6 +86,7 @@
 - 09: 自定义动画实现
 - 10: 从零开发生产级控件
 - 11: 高级性能优化技巧
+- 12: 构建系统与编译链路
          ↓
     动手实践：为 HandyControl 贡献代码或创建自己的控件库
 ```
@@ -227,6 +229,63 @@ double dpiScale = DpiHelper.GetDpiScale();
 
 ---
 
+## 🔧 学习环境准备
+
+本项目的本地学习与构建环境如下，已通过实际编译验证：
+
+### 开发环境
+
+| 组件 | 版本 | 说明 |
+|------|------|------|
+| **操作系统** | Windows 11 | WPF 仅支持 Windows |
+| **IDE** | Visual Studio Enterprise 2026 (v18.11) | 推荐使用，内置 MSBuild 与 WPF 设计器 |
+| **.NET SDK** | 10.0.402 | 编译主力，向下兼容 net40 ~ net10.0 |
+| **构建工具** | Cake.Tool 5.0.0 | 项目官方构建编排器 |
+
+### 环境搭建步骤
+
+1. **安装 Visual Studio 2026**
+   - 勾选「.NET 桌面开发」工作负载
+   - 包含 MSBuild、WPF 设计器、调试器
+
+2. **安装 .NET 10 SDK**
+   ```powershell
+   dotnet --version   # 验证安装，应输出 10.0.x
+   ```
+
+3. **还原 NuGet 包**
+   ```powershell
+   cd src
+   dotnet restore HandyControl.sln
+   ```
+
+4. **安装 Cake 构建工具**
+   ```powershell
+   cd build
+   dotnet new tool-manifest
+   dotnet tool install cake.tool --version 5.0.0
+   ```
+
+5. **构建项目**
+   ```powershell
+   dotnet cake   # 编译全部 20 个框架的库 + Demo，约 10 分钟
+   ```
+
+### 验证构建成功
+
+构建完成后，产物位于 `build/outputs/`：
+- `lib/` — 20 个目标框架的 `HandyControl.dll`
+- `demo/` — 20 个目标框架的 `HandyControlDemo.exe`
+
+运行 Demo 验证：
+```powershell
+build\outputs\demo\net10.0\HandyControlDemo.exe
+```
+
+> 📖 完整构建链路分析见 [12-项目构建与编译链路详解](./12-项目构建与编译链路详解.md)
+
+---
+
 ## 💡 学习建议
 
 ### 1. 理论与实践结合
@@ -271,9 +330,9 @@ HandyControl 提供了完整的 Demo 应用（[HandyControlDemo](../src/Shared/H
 
 #### 源码阅读工具
 
-- **Visual Studio**：F12 跳转到定义，查找所有引用
+- **Visual Studio 2026**：F12 跳转到定义，查找所有引用，内置强大的调试与性能分析工具
 - **ReSharper**：强大的导航和重构功能
-- **dotPeek/Ilspy**：反编译和静态分析
+- **dotPeek/ILSpy**：反编译和静态分析
 
 ### 4. 动手项目建议
 
@@ -377,6 +436,14 @@ HandyControl 提供了完整的 Demo 应用（[HandyControlDemo](../src/Shared/H
 ---
 
 ## 📝 文档更新日志
+
+### v1.2.0 (2026-10-25)
+
+**新增构建系统章节与环境完善：**
+- ✅ 12-项目构建与编译链路详解（工具链分析、Cake 构建系统、20 框架编译链路、本地构建实战记录、常见问题排查）
+- ✅ README 新增「学习环境准备」章节（VS 2026 + .NET 10 SDK 搭建步骤）
+- ✅ 修正文档中 Visual Studio 版本为 2026 (v18.11)，与实际编译环境一致
+- ✅ 01 章节补充解决方案版本兼容性说明
 
 ### v1.1.0 (2026-10-25)
 
